@@ -17,12 +17,34 @@ refiner = DiffusionPipeline.from_pretrained(
 )
 refiner.to("cuda")
 
+negative_prompt = "The artwork avoids the pitfalls of bad art, such as ugly and deformed eyes and faces, poorly drawn, blurry, and disfigured bodies with extra limbs and close-ups that look weird. It also avoids other common issues such as watermarking, text errors, missing fingers or digits, cropping, poor quality, and JPEG artifacts. The artwork is free of signature or watermark and avoids framing issues. The hands are not deformed, the eyes are not disfigured, and there are no extra bodies or limbs. The artwork is not blurry, out of focus, or poorly drawn, and the proportions are not bad or deformed. There are no mutations, missing limbs, or floating or disconnected limbs. The hands and neck are not malformed, and there are no extra heads or out-of-frame elements. The artwork is not low-res or disgusting and is a well-drawn, highly detailed, and beautiful rendering."
+
 # Define how many steps and what % of steps to be run on each experts (80/20) here
 n_steps = 40
 high_noise_frac = 0.8
 
-prompt = "A man holding a balloon with a heart on it wants to fall in love again because I feel a little bored."
+# # single generation
+# prompt = "A man is sitting in front of a desk with glasses on and rubbing his eyes and the view point is back."
+# folder_name = "./examples"
+# # run both experts
+# image = base(
+#     prompt=prompt,
+#     negative_prompt = negative_prompt,
+#     num_inference_steps=n_steps,
+#     denoising_end=high_noise_frac,
+#     output_type="latent",
+# ).images
+# image = refiner(
+#     prompt=prompt,
+#     negative_prompt = negative_prompt,
+#     num_inference_steps=n_steps,
+#     denoising_start=high_noise_frac,
+#     image=image,
+# ).images[0]
 
+# image.save(os.path.join(folder_name,  prompt + "3.png"))
+
+# using for loop
 lines_list = []
 with open("prompts.txt", "r") as file:
     for line in file:
@@ -30,7 +52,7 @@ with open("prompts.txt", "r") as file:
 
 print(lines_list)
 
-folder_name = "./examples/negative_prompt_hand_generation_text_with_various_prompt"
+folder_name = "./examples/precise_negative_prompt_hand_generation_text_with_various_prompt"
 os.mkdir(folder_name)
 
 for idx, prompt in enumerate(lines_list):
